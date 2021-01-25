@@ -181,9 +181,9 @@ function Invoke-HelloIDDynamicForm {
             #Create Dynamic form
             $body = @{
                 Name       = $FormName;
-                FormSchema = $FormSchema
+                FormSchema = [Object[]]($FormSchema | ConvertFrom-Json)
             }
-            $body = $body | ConvertTo-Json
+            $body = $body | ConvertTo-Json -Depth 100
     
             $uri = ($script:PortalBaseUrl +"api/v1/forms")
             $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -261,7 +261,10 @@ function Invoke-HelloIDDelegatedForm {
 $tmpValue = @'
 [{ "OU": "OU=Disabled Users,OU=HelloID Training,DC=veeken,DC=local"}]
 '@ 
-Invoke-HelloIDGlobalVariable -Name "ADusersDisabledSearchOU" -Value $tmpValue -Secret "False" 
+$tmpName = @'
+ADusersDisabledSearchOU
+'@ 
+Invoke-HelloIDGlobalVariable -Name $tmpName -Value $tmpValue -Secret "False" 
 <# End: HelloID Global Variables #>
 
 
@@ -299,7 +302,10 @@ $tmpInput = @'
 
 '@ 
 $dataSourceGuid_0 = [PSCustomObject]@{} 
-Invoke-HelloIDDatasource -DatasourceName "AD-user-generate-table-disabled" -DatasourceType "4" -DatasourceInput $tmpInput -DatasourcePsScript $tmpPsScript -DatasourceModel $tmpModel -returnObject ([Ref]$dataSourceGuid_0) 
+$dataSourceGuid_0_Name = @'
+AD-user-generate-table-disabled
+'@ 
+Invoke-HelloIDDatasource -DatasourceName $dataSourceGuid_0_Name -DatasourceType "4" -DatasourceInput $tmpInput -DatasourcePsScript $tmpPsScript -DatasourceModel $tmpModel -returnObject ([Ref]$dataSourceGuid_0) 
 <# End: DataSource "AD-user-generate-table-disabled" #>
 <# End: HelloID Data sources #>
 
@@ -309,7 +315,10 @@ $tmpSchema = @"
 "@ 
 
 $dynamicFormGuid = [PSCustomObject]@{} 
-Invoke-HelloIDDynamicForm -FormName "AD Account - Remove inactive account" -FormSchema $tmpSchema  -returnObject ([Ref]$dynamicFormGuid) 
+$dynamicFormName = @'
+AD Account - Remove inactive account
+'@ 
+Invoke-HelloIDDynamicForm -FormName $dynamicFormName -FormSchema $tmpSchema  -returnObject ([Ref]$dynamicFormGuid) 
 <# END: Dynamic Form #>
 
 <# Begin: Delegated Form Access Groups and Categories #>
@@ -357,7 +366,10 @@ $delegatedFormCategoryGuids = ($delegatedFormCategoryGuids | ConvertTo-Json -Com
 
 <# Begin: Delegated Form #>
 $delegatedFormRef = [PSCustomObject]@{guid = $null; created = $null} 
-Invoke-HelloIDDelegatedForm -DelegatedFormName "AD Account - Remove inactive account" -DynamicFormGuid $dynamicFormGuid -AccessGroups $delegatedFormAccessGroupGuids -Categories $delegatedFormCategoryGuids -UseFaIcon "True" -FaIcon "fa fa-trash-o" -returnObject ([Ref]$delegatedFormRef) 
+$delegatedFormName = @'
+AD Account - Remove inactive account
+'@
+Invoke-HelloIDDelegatedForm -DelegatedFormName $delegatedFormName -DynamicFormGuid $dynamicFormGuid -AccessGroups $delegatedFormAccessGroupGuids -Categories $delegatedFormCategoryGuids -UseFaIcon "True" -FaIcon "fa fa-trash-o" -returnObject ([Ref]$delegatedFormRef) 
 <# End: Delegated Form #>
 
 <# Begin: Delegated Form Task #>
@@ -387,8 +399,11 @@ try{
 '@ 
 
 	$delegatedFormTaskGuid = [PSCustomObject]@{} 
-	Invoke-HelloIDAutomationTask -TaskName "AD-user-delete" -UseTemplate "False" -AutomationContainer "8" -Variables $tmpVariables -PowershellScript $tmpScript -ObjectGuid $delegatedFormRef.guid -ForceCreateTask $true -returnObject ([Ref]$delegatedFormTaskGuid) 
+$delegatedFormTaskName = @'
+AD-user-delete
+'@
+	Invoke-HelloIDAutomationTask -TaskName $delegatedFormTaskName -UseTemplate "False" -AutomationContainer "8" -Variables $tmpVariables -PowershellScript $tmpScript -ObjectGuid $delegatedFormRef.guid -ForceCreateTask $true -returnObject ([Ref]$delegatedFormTaskGuid) 
 } else {
-	Write-ColorOutput Yellow "Delegated form 'AD Account - Remove inactive account' already exists. Nothing to do with the Delegated Form task..." 
+	Write-ColorOutput Yellow "Delegated form '$delegatedFormName' already exists. Nothing to do with the Delegated Form task..." 
 }
 <# End: Delegated Form Task #>
