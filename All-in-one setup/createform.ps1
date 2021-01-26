@@ -46,7 +46,7 @@ function Invoke-HelloIDGlobalVariable {
                 secret   = $Secret;
                 ItemType = 0;
             }    
-            $body = $body | ConvertTo-Json
+            $body = ConvertTo-Json -InputObject $body
     
             $uri = ($script:PortalBaseUrl + "api/v1/automation/variable")
             $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -90,7 +90,7 @@ function Invoke-HelloIDAutomationTask {
                 objectGuid          = $ObjectGuid;
                 variables           = [Object[]]($Variables | ConvertFrom-Json);
             }
-            $body = $body | ConvertTo-Json
+            $body = ConvertTo-Json -InputObject $body
     
             $uri = ($script:PortalBaseUrl +"api/v1/automationtasks/powershell")
             $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -143,7 +143,7 @@ function Invoke-HelloIDDatasource {
                 script             = $DatasourcePsScript;
                 input              = [Object[]]($DatasourceInput | ConvertFrom-Json);
             }
-            $body = $body | ConvertTo-Json
+            $body = ConvertTo-Json -InputObject $body
       
             $uri = ($script:PortalBaseUrl +"api/v1/datasource")
             $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -183,7 +183,7 @@ function Invoke-HelloIDDynamicForm {
                 Name       = $FormName;
                 FormSchema = [Object[]]($FormSchema | ConvertFrom-Json)
             }
-            $body = $body | ConvertTo-Json -Depth 100
+            $body = ConvertTo-Json -InputObject $body -Depth 100
     
             $uri = ($script:PortalBaseUrl +"api/v1/forms")
             $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -232,7 +232,7 @@ function Invoke-HelloIDDelegatedForm {
                 useFaIcon       = $UseFaIcon;
                 faIcon          = $FaIcon;
             }    
-            $body = $body | ConvertTo-Json
+            $body = ConvertTo-Json -InputObject $body
     
             $uri = ($script:PortalBaseUrl +"api/v1/delegatedforms")
             $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -299,7 +299,7 @@ $tmpModel = @'
 [{"key":"SamAccountName","type":0},{"key":"Title","type":0},{"key":"Description","type":0},{"key":"Company","type":0},{"key":"Department","type":0},{"key":"displayName","type":0},{"key":"UserPrincipalName","type":0}]
 '@ 
 $tmpInput = @'
-
+[]
 '@ 
 $dataSourceGuid_0 = [PSCustomObject]@{} 
 $dataSourceGuid_0_Name = @'
@@ -311,7 +311,7 @@ Invoke-HelloIDDatasource -DatasourceName $dataSourceGuid_0_Name -DatasourceType 
 
 <# Begin: Dynamic Form "AD Account - Remove inactive account" #>
 $tmpSchema = @"
-{"key":"grid","templateOptions":{"label":"Select user account","required":true,"grid":{"columns":[{"headerName":"DisplayName","field":"displayName"},{"headerName":"UserPrincipalName","field":"UserPrincipalName"},{"headerName":"Department","field":"Department"},{"headerName":"Title","field":"Title"},{"headerName":"Description","field":"Description"}],"height":300,"rowSelection":"single"},"dataSourceConfig":{"dataSourceGuid":"$dataSourceGuid_0","input":{"propertyInputs":[]}},"useFilter":false},"type":"grid","summaryVisibility":"Show","requiresTemplateOptions":true}
+[{"key":"grid","templateOptions":{"label":"Select user account","required":true,"grid":{"columns":[{"headerName":"DisplayName","field":"displayName"},{"headerName":"UserPrincipalName","field":"UserPrincipalName"},{"headerName":"Department","field":"Department"},{"headerName":"Title","field":"Title"},{"headerName":"Description","field":"Description"}],"height":300,"rowSelection":"single"},"dataSourceConfig":{"dataSourceGuid":"$dataSourceGuid_0","input":{"propertyInputs":[]}},"useFilter":false},"type":"grid","summaryVisibility":"Show","requiresTemplateOptions":true}]
 "@ 
 
 $dynamicFormGuid = [PSCustomObject]@{} 
@@ -335,7 +335,7 @@ foreach($group in $delegatedFormAccessGroupNames) {
         Write-ColorOutput Red "HelloID (access)group '$group', message: $_"
     }
 }
-$delegatedFormAccessGroupGuids = ($delegatedFormAccessGroupGuids | ConvertTo-Json -Compress)
+$delegatedFormAccessGroupGuids = (ConvertTo-Json -InputObject $delegatedFormAccessGroupGuids -Compress)
 
 $delegatedFormCategoryGuids = @()
 foreach($category in $delegatedFormCategories) {
@@ -351,7 +351,7 @@ foreach($category in $delegatedFormCategories) {
         $body = @{
             name = @{"en" = $category};
         }
-        $body = $body | ConvertTo-Json
+        $body = ConvertTo-Json -InputObject $body
 
         $uri = ($script:PortalBaseUrl +"api/v1/delegatedformcategories")
         $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $script:headers -ContentType "application/json" -Verbose:$false -Body $body
@@ -361,7 +361,7 @@ foreach($category in $delegatedFormCategories) {
         Write-ColorOutput Green "HelloID Delegated Form category '$category' successfully created: $tmpGuid"
     }
 }
-$delegatedFormCategoryGuids = ($delegatedFormCategoryGuids | ConvertTo-Json -Compress)
+$delegatedFormCategoryGuids = (ConvertTo-Json -InputObject $delegatedFormCategoryGuids -Compress)
 <# End: Delegated Form Access Groups and Categories #>
 
 <# Begin: Delegated Form #>
