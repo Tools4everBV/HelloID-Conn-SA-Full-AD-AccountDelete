@@ -1,0 +1,4 @@
+{
+    "name":  "userPrincipalName",
+    "value":  "{{form.grid.UserPrincipalName}}"
+}
