@@ -1,45 +1,47 @@
-{
-    "key":  "grid",
-    "templateOptions":  {
-                            "label":  "Select user account",
-                            "required":  true,
-                            "grid":  {
-                                         "columns":  [
-                                                         {
-                                                             "headerName":  "DisplayName",
-                                                             "field":  "displayName"
-                                                         },
-                                                         {
-                                                             "headerName":  "UserPrincipalName",
-                                                             "field":  "UserPrincipalName"
-                                                         },
-                                                         {
-                                                             "headerName":  "Department",
-                                                             "field":  "Department"
-                                                         },
-                                                         {
-                                                             "headerName":  "Title",
-                                                             "field":  "Title"
-                                                         },
-                                                         {
-                                                             "headerName":  "Description",
-                                                             "field":  "Description"
-                                                         }
-                                                     ],
-                                         "height":  300,
-                                         "rowSelection":  "single"
-                                     },
-                            "dataSourceConfig":  {
-                                                     "dataSourceGuid":  "$dataSourceGuid_0",
-                                                     "input":  {
-                                                                   "propertyInputs":  [
+[
+    {
+        "key":  "grid",
+        "templateOptions":  {
+                                "label":  "Select user account",
+                                "required":  true,
+                                "grid":  {
+                                             "columns":  [
+                                                             {
+                                                                 "headerName":  "DisplayName",
+                                                                 "field":  "displayName"
+                                                             },
+                                                             {
+                                                                 "headerName":  "UserPrincipalName",
+                                                                 "field":  "UserPrincipalName"
+                                                             },
+                                                             {
+                                                                 "headerName":  "Department",
+                                                                 "field":  "Department"
+                                                             },
+                                                             {
+                                                                 "headerName":  "Title",
+                                                                 "field":  "Title"
+                                                             },
+                                                             {
+                                                                 "headerName":  "Description",
+                                                                 "field":  "Description"
+                                                             }
+                                                         ],
+                                             "height":  300,
+                                             "rowSelection":  "single"
+                                         },
+                                "dataSourceConfig":  {
+                                                         "dataSourceGuid":  "$dataSourceGuid_0",
+                                                         "input":  {
+                                                                       "propertyInputs":  [
 
-                                                                                      ]
-                                                               }
-                                                 },
-                            "useFilter":  false
-                        },
-    "type":  "grid",
-    "summaryVisibility":  "Show",
-    "requiresTemplateOptions":  true
-}
+                                                                                          ]
+                                                                   }
+                                                     },
+                                "useFilter":  false
+                            },
+        "type":  "grid",
+        "summaryVisibility":  "Show",
+        "requiresTemplateOptions":  true
+    }
+]
