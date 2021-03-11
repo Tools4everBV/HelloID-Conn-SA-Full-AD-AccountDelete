@@ -34,7 +34,7 @@ After the all-in-one PowerShell script has run and created all the required reso
 ## Manual resources
 This Delegated Form uses the following resources in order to run
 
-### Powershell data source 'AD-user-generate-table-disabled'
+### Powershell data source 'AD-user-generate-table-disabled-remove-account'
 This Powershell data source runs an Active Directory query to search for disabled AD user accounts. It uses an array of Active Directory OU's specified as HelloID user defined variable named _"ADusersDisabledSearchOU"_ to specify the search scope.
 
 ### Delegated form task 'AD-user-delete'
