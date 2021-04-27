@@ -39,3 +39,6 @@ This Powershell data source runs an Active Directory query to search for disable
 
 ### Delegated form task 'AD-user-delete'
 This delegated form task will delete the selected AD user account from Active Directory.
+
+# HelloID Docs
+The official HelloID documentation can be found at: https://docs.helloid.com/
