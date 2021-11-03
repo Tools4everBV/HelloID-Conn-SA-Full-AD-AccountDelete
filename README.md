@@ -3,7 +3,14 @@
 This HelloID Service Automation Delegated Form provides the deletion of disabled AD accounts functionality. The following options are available:
  1. Search and select the target AD user account
  2. Delete selected AD account after confirmation
- 
+
+
+## Versioning
+| Version | Description | Date |
+| - | - | - |
+| 1.0.1   | Added version number and updated all-in-one script | 2021/11/03  |
+| 1.0.0   | Initial release | 2020/09/01  |
+
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 * [Description](#description)
@@ -11,6 +18,7 @@ This HelloID Service Automation Delegated Form provides the deletion of disabled
   * [Getting started](#getting-started)
 * [Post-setup configuration](#post-setup-configuration)
 * [Manual resources](#manual-resources)
+* [Getting help](#getting-help)
 
 
 ## All-in-one PowerShell setup script
@@ -40,5 +48,8 @@ This Powershell data source runs an Active Directory query to search for disable
 ### Delegated form task 'AD-user-delete'
 This delegated form task will delete the selected AD user account from Active Directory.
 
-# HelloID Docs
+## Getting help
+_If you need help, feel free to ask questions on our [forum](https://forum.helloid.com/forum/helloid-connectors/service-automation/511-helloid-sa-active-directory-remove-inactive-ad-account)_
+
+## HelloID Docs
 The official HelloID documentation can be found at: https://docs.helloid.com/
