@@ -15,7 +15,7 @@ This HelloID Service Automation Delegated Form provides the deletion of disabled
 ## Table of Contents
 * [Description](#description)
 * [All-in-one PowerShell setup script](#all-in-one-powershell-setup-script)
-  * [Getting started](#getting-started)
+* [Getting started](#getting-started)
 * [Post-setup configuration](#post-setup-configuration)
 * [Manual resources](#manual-resources)
 * [Getting help](#getting-help)
@@ -36,7 +36,7 @@ After the all-in-one PowerShell script has run and created all the required reso
  1. Update the following [user defined variables](https://docs.helloid.com/hc/en-us/articles/360014169933-How-to-Create-and-Manage-User-Defined-Variables)
 <table>
   <tr><td><strong>Variable name</strong></td><td><strong>Example value</strong></td><td><strong>Description</strong></td></tr>
-  <tr><td>ADusersDisabledSearchOU</td><td>[{ "OU": "OU=Disabled Users,OU=HelloID Training,DC=veeken,DC=local"}]</td><td>Array of Active Directory OUs for scoping AD user accounts in this form</td></tr>
+  <tr><td>ADusersDisabledSearchOU</td><td>[{ "OU": "OU=Disabled Users,OU=HelloID Training,DC=domain,DC=local"}]</td><td>Array of Active Directory OUs for scoping AD user accounts in this form</td></tr>
 </table>
 
 ## Manual resources
@@ -45,7 +45,7 @@ This Delegated Form uses the following resources in order to run
 ### Powershell data source 'AD-user-generate-table-disabled-remove-account'
 This Powershell data source runs an Active Directory query to search for disabled AD user accounts. It uses an array of Active Directory OU's specified as HelloID user defined variable named _"ADusersDisabledSearchOU"_ to specify the search scope.
 
-### Delegated form task 'AD-user-delete'
+### Delegated form task 'AD Account - Remove inactive account'
 This delegated form task will delete the selected AD user account from Active Directory.
 
 ## Getting help
