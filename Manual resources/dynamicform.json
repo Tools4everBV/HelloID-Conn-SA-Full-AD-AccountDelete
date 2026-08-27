@@ -1,47 +1,69 @@
 [
-    {
-        "key":  "grid",
-        "templateOptions":  {
-                                "label":  "Select user account",
-                                "required":  true,
-                                "grid":  {
-                                             "columns":  [
-                                                             {
-                                                                 "headerName":  "DisplayName",
-                                                                 "field":  "displayName"
-                                                             },
-                                                             {
-                                                                 "headerName":  "UserPrincipalName",
-                                                                 "field":  "UserPrincipalName"
-                                                             },
-                                                             {
-                                                                 "headerName":  "Department",
-                                                                 "field":  "Department"
-                                                             },
-                                                             {
-                                                                 "headerName":  "Title",
-                                                                 "field":  "Title"
-                                                             },
-                                                             {
-                                                                 "headerName":  "Description",
-                                                                 "field":  "Description"
-                                                             }
-                                                         ],
-                                             "height":  300,
-                                             "rowSelection":  "single"
-                                         },
-                                "dataSourceConfig":  {
-                                                         "dataSourceGuid":  "$dataSourceGuid_0",
-                                                         "input":  {
-                                                                       "propertyInputs":  [
-
-                                                                                          ]
-                                                                   }
-                                                     },
-                                "useFilter":  false
-                            },
-        "type":  "grid",
-        "summaryVisibility":  "Show",
-        "requiresTemplateOptions":  true
-    }
+  {
+    "key": "searchValue",
+    "templateOptions": {
+      "label": "Search (wildcard search in Name, Display name, UserPrincipalName and Mail)",
+      "required": true,
+      "minLength": 1,
+      "placeholder": "Name, Display name, UserPrincipalName or Mail (use * to search all users)"
+    },
+    "type": "input",
+    "summaryVisibility": "Hide element",
+    "requiresTemplateOptions": true,
+    "requiresKey": true,
+    "requiresDataSource": false
+  },
+  {
+    "key": "gridUsers",
+    "templateOptions": {
+      "label": "Select user",
+      "required": true,
+      "grid": {
+        "columns": [
+          {
+            "headerName": "DisplayName",
+            "field": "displayName"
+          },
+          {
+            "headerName": "UserPrincipalName",
+            "field": "UserPrincipalName"
+          },
+          {
+            "headerName": "Department",
+            "field": "Department"
+          },
+          {
+            "headerName": "Title",
+            "field": "Title"
+          },
+          {
+            "headerName": "Description",
+            "field": "Description"
+          }
+        ],
+        "height": 300,
+        "rowSelection": "single"
+      },
+      "dataSourceConfig": {
+        "dataSourceGuid": "$dataSourceGuid_0",
+        "input": {
+          "propertyInputs": [
+            {
+              "propertyName": "searchValue",
+              "otherFieldValue": {
+                "otherFieldKey": "searchValue"
+              }
+            }
+          ]
+        }
+      },
+      "useFilter": true,
+      "allowCsvDownload": true
+    },
+    "type": "grid",
+    "summaryVisibility": "Show",
+    "requiresTemplateOptions": true,
+    "requiresKey": true,
+    "requiresDataSource": true
+  }
 ]
