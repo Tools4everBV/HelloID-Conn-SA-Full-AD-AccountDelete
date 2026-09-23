@@ -1,56 +1,95 @@
-<!-- Description -->
+# HelloID-Conn-SA-Full-AD-AccountDelete
+
+| :information_source: Information |
+|:---|
+| This repository contains the connector and configuration code only. The implementer is responsible for acquiring the connection details such as username, password, certificate, etc. You might even need to sign a contract or agreement with the supplier before implementing this connector. Please contact the client's application manager to coordinate the connector requirements. |
+
 ## Description
-This HelloID Service Automation Delegated Form provides the deletion of disabled AD accounts functionality. The following options are available:
- 1. Search and select the target AD user account
- 2. Delete selected AD account after confirmation
 
+_HelloID-Conn-SA-Full-AD-AccountDelete_ is a delegated form designed for use with HelloID Service Automation (SA). It can be imported into HelloID and customized according to your requirements.
 
-## Versioning
-| Version | Description | Date |
-| - | - | - |
-| 1.0.2   | Added version number and updated with code for SA agent and audit logging | 2022/08/02  |
-| 1.0.1   | Added version number and updated all-in-one script | 2021/11/03  |
-| 1.0.0   | Initial release | 2020/09/01  |
+This delegated form searches for disabled Active Directory user accounts and permanently deletes the selected account. The following options are available:
 
-<!-- TABLE OF CONTENTS -->
-## Table of Contents
-* [Description](#description)
-* [All-in-one PowerShell setup script](#all-in-one-powershell-setup-script)
-* [Getting started](#getting-started)
-* [Post-setup configuration](#post-setup-configuration)
-* [Manual resources](#manual-resources)
-* [Getting help](#getting-help)
+1. Search for disabled Active Directory user accounts
+2. Select an account from the search results
+3. Confirm and delete the selected account
 
+Deletion is recursive and cannot be undone. Configure the search scope carefully and test the form before making it available to end users.
 
-## All-in-one PowerShell setup script
-The PowerShell script "createform.ps1" contains a complete PowerShell script using the HelloID API to create the complete Form including user defined variables, tasks and data sources.
+## Getting started
 
- _Please note that this script asumes none of the required resources do exists within HelloID. The script does not contain versioning or source control_
+### Requirements
 
+- **Active Directory access**: The connector requires access to an Active Directory domain with sufficient permissions to search for users and delete objects. A service account with appropriate AD permissions is necessary.
+- **HelloID Agent**: A HelloID Agent must be installed and configured to communicate with the Active Directory domain.
+- **PowerShell module `ActiveDirectory`**: The HelloID Agent must have PowerShell available with the ActiveDirectory module installed.
 
-### Getting started
-Please follow the documentation steps on [HelloID Docs](https://docs.helloid.com/hc/en-us/articles/360017556559-Service-automation-GitHub-resources) in order to setup and run the All-in one Powershell Script in your own environment.
+### Connection settings
 
- 
-## Post-setup configuration
-After the all-in-one PowerShell script has run and created all the required resources. The following items need to be configured according to your own environment
- 1. Update the following [user defined variables](https://docs.helloid.com/hc/en-us/articles/360014169933-How-to-Create-and-Manage-User-Defined-Variables)
-<table>
-  <tr><td><strong>Variable name</strong></td><td><strong>Example value</strong></td><td><strong>Description</strong></td></tr>
-  <tr><td>ADusersDisabledSearchOU</td><td>[{ "OU": "OU=Disabled Users,OU=HelloID Training,DC=domain,DC=local"}]</td><td>Array of Active Directory OUs for scoping AD user accounts in this form</td></tr>
-</table>
+The following user-defined variable is used by the connector:
 
-## Manual resources
-This Delegated Form uses the following resources in order to run
+| Setting                   | Description                                                                                                             | Mandatory |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------- |
+| `AdUsersDisabledSearchOu` | Semicolon-separated (`;`) list of Active Directory OUs used to scope disabled-user search results in the delegated form | Yes       |
 
-### Powershell data source 'AD-user-generate-table-disabled-remove-account'
-This Powershell data source runs an Active Directory query to search for disabled AD user accounts. It uses an array of Active Directory OU's specified as HelloID user defined variable named _"ADusersDisabledSearchOU"_ to specify the search scope.
+The value can contain one or more distinguished names, for example:
 
-### Delegated form task 'AD Account - Remove inactive account'
-This delegated form task will delete the selected AD user account from Active Directory.
+```text
+OU=Disabled Users,OU=HelloID Training,DC=domain,DC=local;OU=Disabled Users,DC=domain,DC=local
+```
+
+The variable can be created and managed using the [HelloID user-defined variables](https://docs.helloid.com/hc/en-us/articles/360014169933-How-to-Create-and-Manage-User-Defined-Variables) documentation.
+
+## Remarks
+
+### User search
+
+- A wildcard search (`*`) returns all disabled users within the configured OUs.
+- A partial search matches the `Name`, `DisplayName`, `UserPrincipalName`, and `Mail` attributes.
+- Only accounts where `Enabled` is `False` are returned.
+- The search scope is limited to the OUs defined in `AdUsersDisabledSearchOu`. Configure this variable carefully to avoid exposing or deleting accounts outside the intended scope.
+
+### Account deletion
+
+The delegated form deletes the selected Active Directory object with `Remove-ADObject -Recursive -Confirm:$false`. The task also writes an audit log entry for successful and failed deletion attempts.
+
+## Development resources
+
+### PowerShell module
+
+This connector uses the ActiveDirectory PowerShell module to search for and delete Active Directory user accounts.
+
+- [ActiveDirectory module documentation](https://learn.microsoft.com/en-us/powershell/module/activedirectory/)
+
+### Cmdlets
+
+The following PowerShell cmdlets are used by the connector:
+
+| Cmdlet            | Description                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| `Get-ADUser`      | Retrieves disabled Active Directory user accounts within the configured search bases |
+| `Remove-ADObject` | Permanently removes the selected Active Directory object and its children            |
+
+### Cmdlet documentation
+
+- [Get-ADUser](https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-aduser)
+- [Remove-ADObject](https://learn.microsoft.com/en-us/powershell/module/activedirectory/remove-adobject)
 
 ## Getting help
-_If you need help, feel free to ask questions on our [forum](https://forum.helloid.com/forum/helloid-connectors/service-automation/511-helloid-sa-active-directory-remove-inactive-ad-account)_
 
-## HelloID Docs
-The official HelloID documentation can be found at: https://docs.helloid.com/
+For more information on Delegated Forms, refer to the [HelloID Delegated Forms documentation](https://docs.helloid.com/en/service-automation/delegated-forms.html).
+
+## HelloID docs
+
+The official HelloID documentation can be found at [docs.helloid.com](https://docs.helloid.com/).
+
+## Additional links
+
+- [Code](https://github.com/Tools4everBV/HelloID-Conn-SA-Full-AD-AccountDelete)
+- [Issues](https://github.com/Tools4everBV/HelloID-Conn-SA-Full-AD-AccountDelete/issues)
+- [Pull requests](https://github.com/Tools4everBV/HelloID-Conn-SA-Full-AD-AccountDelete/pulls)
+- [Actions](https://github.com/Tools4everBV/HelloID-Conn-SA-Full-AD-AccountDelete/actions)
+- [Main branch](https://github.com/Tools4everBV/HelloID-Conn-SA-Full-AD-AccountDelete/tree/main)
+
+> **Information**
+> This repository contains connector and configuration code only. The implementer is responsible for acquiring connection details such as username, password, and certificates. Please contact the client's application manager to coordinate the connector requirements.

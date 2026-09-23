@@ -1,37 +1,40 @@
-$userPrincipalName = $form.grid.UserPrincipalName
+# variables configured in form
+$user = $form.gridUsers
+
+# Set debug logging
+$VerbosePreference = "SilentlyContinue"
+$InformationPreference = "Continue"
+$WarningPreference = "Continue"
 
 try {
-    $adUser = Get-ADuser -Filter { UserPrincipalName -eq $userPrincipalName }
-    write-information "Found AD user [$userPrincipalName]"
-}
-catch {
-    write-error "Could not find AD user [$userPrincipalName]. Error: $($_.Exception.Message)"
-}
+    $actionMessage = "deleting AD account for user [$($user.userPrincipalName)] with objectguid [$($user.ObjectGuid)]"
 
-try {
-    Remove-ADObject -Identity $adUser.DistinguishedName -Recursive -Confirm:$false
-    write-information "Finished deleting AD user [$userPrincipalName]"
+    Remove-ADObject -Identity $user.ObjectGuid -Recursive -Confirm:$false
+
     $Log = @{
-            Action            = "DeleteAccount" # optional. ENUM (undefined = default) 
-            System            = "ActiveDirectory" # optional (free format text) 
-            Message           = "Successfully deleted AD user $userPrincipalName" # required (free format text) 
-            IsError           = $false # optional. Elastic reporting purposes only. (default = $false. $true = Executed action returned an error) 
-            TargetDisplayName = $adUser.Name # optional (free format text) 
-            TargetIdentifier  = $([string]$adUser.SID) # optional (free format text) 
-        }
-        #send result back  
-        Write-Information -Tags "Audit" -MessageData $log
+        Action            = "DeleteAccount" # optional. ENUM (undefined = default) 
+        System            = "ActiveDirectory" # optional (free format text) 
+        Message           = "Deleted AD account: [$($user.userPrincipalName)] with objectguid [$($user.ObjectGuid)]" # required (free format text) 
+        IsError           = $false # optional. Elastic reporting purposes only. (default = $false. $true = Executed action returned an error) 
+        TargetDisplayName = $user.userPrincipalName # optional (free format text) 
+        TargetIdentifier  = $user.ObjectGuid # optional (free format text) 
+    }
+    Write-Information -Tags "Audit" -MessageData $log
 }
 catch {
-    write-error "Could not delete AD user [$userPrincipalName]. Error: $($_.Exception.Message)" 
-    $Log = @{
-            Action            = "DeleteAccount" # optional. ENUM (undefined = default) 
-            System            = "ActiveDirectory" # optional (free format text) 
-            Message           = "Failed to delete AD user $userPrincipalName" # required (free format text) 
-            IsError           = $true # optional. Elastic reporting purposes only. (default = $false. $true = Executed action returned an error) 
-            TargetDisplayName = $adUser.Name # optional (free format text) 
-            TargetIdentifier  = $([string]$adUser.SID) # optional (free format text) 
-        }
-        #send result back  
-        Write-Information -Tags "Audit" -MessageData $log
+    $ex = $PSItem
+    $auditMessage = "Error $($actionMessage). Error: $($ex.Exception.Message)"
+    $warningMessage = "Error at Line [$($ex.InvocationInfo.ScriptLineNumber)]: $($ex.InvocationInfo.Line). Error: $($ex.Exception.Message)"
+    
+    $log = @{
+        Action            = "DeleteAccount" # optional. ENUM (undefined = default) 
+        System            = "ActiveDirectory" # optional (free format text) 
+        Message           = $auditMessage # required (free format text) 
+        IsError           = $true # optional. Elastic reporting purposes only. (default = $false. $true = Executed action returned an error) 
+        TargetDisplayName = $user.userPrincipalName # optional (free format text) 
+        TargetIdentifier  = $user.ObjectGuid # optional (free format text) 
+    }
+    Write-Information -Tags "Audit" -MessageData $log
+    Write-Warning $warningMessage
+    Write-Error $auditMessage
 }
