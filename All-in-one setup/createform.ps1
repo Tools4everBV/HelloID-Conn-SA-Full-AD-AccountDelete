@@ -323,7 +323,7 @@ foreach ($item in $globalHelloIDVariables) {
 
 
 <# Begin: HelloID Data sources #>
-<# Begin: DataSource "AD Account - Delete inactive account | AD-Get-Users-Wildcard-Name-DisplayName-UPN-Mail" #>
+<# Begin: DataSource "ad-account-delete-inactive-account | AD-Get-Users-Wildcard-Name-DisplayName-UPN-Mail" #>
 $tmpPsScript = @'
 # Variables configured in form
 $searchValue = $dataSource.searchValue
@@ -402,10 +402,10 @@ $tmpInput = @'
 '@ 
 $dataSourceGuid_0 = [PSCustomObject]@{} 
 $dataSourceGuid_0_Name = @'
-AD Account - Delete inactive account | AD-Get-Users-Wildcard-Name-DisplayName-UPN-Mail
+ad-account-delete-inactive-account | AD-Get-Users-Wildcard-Name-DisplayName-UPN-Mail
 '@ 
 Invoke-HelloIDDatasource -DatasourceName $dataSourceGuid_0_Name -DatasourceType "4" -DatasourceInput $tmpInput -DatasourcePsScript $tmpPsScript -DatasourceModel $tmpModel -DataSourceRunInCloud "False" -returnObject ([Ref]$dataSourceGuid_0) 
-<# End: DataSource "AD Account - Delete inactive account | AD-Get-Users-Wildcard-Name-DisplayName-UPN-Mail" #>
+<# End: DataSource "ad-account-delete-inactive-account | AD-Get-Users-Wildcard-Name-DisplayName-UPN-Mail" #>
 <# End: HelloID Data sources #>
 
 <# Begin: Dynamic Form "AD Account - Delete inactive account" #>
